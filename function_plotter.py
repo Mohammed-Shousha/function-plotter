@@ -1,7 +1,6 @@
 from PySide2.QtWidgets import (
     QApplication,
     QLabel,
-    QMessageBox,
     QPushButton,
     QWidget,
     QDoubleSpinBox,
@@ -17,8 +16,8 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 import numpy as np
 import sys
 
-from constants import RANGE_ERROR_MSG, FUNCTION_ERROR_MSG
 from utils import validate_input, create_expression_function
+from constants import RANGE_ERROR_MSG, FUNCTION_ERROR_MSG, RANGE
 
 
 class FunctionPlotter(QWidget):
@@ -33,16 +32,20 @@ class FunctionPlotter(QWidget):
 
         self.min_label = QLabel('Minimum x value:')
         self.min_spinbox = QDoubleSpinBox()
-        self.min_spinbox.setRange(-1000, 1000)
+        self.min_spinbox.setRange(*RANGE)
         self.min_spinbox.setValue(-10)
 
         self.max_label = QLabel('Maximum x value:')
         self.max_spinbox = QDoubleSpinBox()
-        self.max_spinbox.setRange(-1000, 1000)
+        self.max_spinbox.setRange(*RANGE)
         self.max_spinbox.setValue(10)
 
         self.plot_button = QPushButton('Plot')
         self.plot_button.clicked.connect(self.plot)
+
+        # set up warning label
+        self.warning_label = QLabel()
+        self.warning_label.setStyleSheet('color: red')
 
         # set up plot display
         self.figure = Figure()
@@ -69,13 +72,14 @@ class FunctionPlotter(QWidget):
         self.plot_layout.addLayout(self.button_layout)
         self.plot_layout.addWidget(self.toolbar)
         self.plot_layout.addWidget(self.canvas)
+        self.plot_layout.addWidget(self.warning_label)
 
         self.setLayout(self.plot_layout)
         self.setWindowTitle('Function Plotter')
         self.setGeometry(100, 100, 800, 600)
 
     def show_warning(self, message):
-        QMessageBox.warning(self, 'Invalid Input', message)
+        self.warning_label.setText('Invalid input: ' + message)
 
     def plot(self):
         user_input = self.input_edit.text()
@@ -99,6 +103,7 @@ class FunctionPlotter(QWidget):
             return
 
         self.figure.clear()
+        self.warning_label.setText('')
         ax = self.figure.add_subplot()
         ax.plot(x, y)
         ax.set_xlabel('x')
