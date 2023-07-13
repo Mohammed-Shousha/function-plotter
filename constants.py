@@ -1,6 +1,6 @@
 import re
 
-# list of allowed words to be entered by the user
+# list of allowed symbols to be entered by the user
 ALLOWED = [
     'x',
     'sin',
@@ -20,11 +20,12 @@ ALLOWED = [
     ')',
 ]
 
+# regex pattern to check if the input is valid
 PATTERN = r'^(\s*([0-9]+(?:\.[0-9]+)?|{})\s*)+$'.format(
     '|'.join(map(re.escape, ALLOWED)))
 
 
-# dictionary of replacements for string to mathematical expression conversion
+# dictionary of replacements from string to mathematical expression
 REPLACEMENTS = {
     'sin': 'np.sin',
     'cos': 'np.cos',
@@ -37,5 +38,9 @@ REPLACEMENTS = {
     'e': 'np.e',
 }
 
-FUNCTION_ERROR_MSG = f"Invalid function.\nOnly functions of 'x' are allowed. e.g., 5*x^3 + 2/x - 1.\nAllowed symbols: {', '.join(ALLOWED)}"
-RANGE_ERROR_MSG = "Invalid range. Minimum x value must be less than maximum x value."
+# range of x values to be plotted
+RANGE = (-1000, 1000)
+
+# error messages
+FUNCTION_ERROR_MSG = f"Only functions of 'x' are allowed. e.g., 5*x^3 + 2/x - 1.\nAllowed symbols: {', '.join(ALLOWED)}"
+RANGE_ERROR_MSG = "Minimum x value must be less than maximum x value."
