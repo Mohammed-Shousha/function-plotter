@@ -18,6 +18,7 @@ import sys
 
 from utils import validate_input, create_expression_function
 from constants import RANGE_ERROR_MSG, FUNCTION_ERROR_MSG, RANGE
+from styles import INPUT_STYLE, WARNING_STYLE, BUTTON_STYLE, WINDOW_STYLE
 
 
 class FunctionPlotter(QWidget):
@@ -29,23 +30,27 @@ class FunctionPlotter(QWidget):
         self.input_edit = QLineEdit()
         self.input_edit.setPlaceholderText('e.g. sin(x) + 2*x^2')
         self.input_edit.returnPressed.connect(self.plot)
+        self.input_edit.setStyleSheet(INPUT_STYLE)
 
         self.min_label = QLabel('Minimum x value:')
         self.min_spinbox = QDoubleSpinBox()
         self.min_spinbox.setRange(*RANGE)
         self.min_spinbox.setValue(-10)
+        self.min_spinbox.setStyleSheet(INPUT_STYLE)
 
         self.max_label = QLabel('Maximum x value:')
         self.max_spinbox = QDoubleSpinBox()
         self.max_spinbox.setRange(*RANGE)
         self.max_spinbox.setValue(10)
+        self.max_spinbox.setStyleSheet(INPUT_STYLE)
 
         self.plot_button = QPushButton('Plot')
+        self.plot_button.setStyleSheet(BUTTON_STYLE)
         self.plot_button.clicked.connect(self.plot)
 
         # set up warning label
         self.warning_label = QLabel()
-        self.warning_label.setStyleSheet('color: red')
+        self.warning_label.setStyleSheet(WARNING_STYLE)
 
         # set up plot display
         self.figure = Figure()
@@ -114,5 +119,6 @@ class FunctionPlotter(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = FunctionPlotter()
+    window.setStyleSheet(WINDOW_STYLE)
     window.show()
     sys.exit(app.exec_())
